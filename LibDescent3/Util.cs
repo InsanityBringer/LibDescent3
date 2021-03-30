@@ -16,6 +16,8 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
 -----------------------------------------------------------------------------*/
+using System.Linq;
+using System.IO;
 
 namespace LibDescent3
 {
@@ -33,6 +35,29 @@ namespace LibDescent3
         public static uint MakeSig(char a, char b, char c, char d)
         {
             return ((uint)d << 24) + ((uint)c << 16) + ((uint)b << 8) + a;
+        }
+
+        public static string ReadStringHelper(BinaryReader br, int max)
+        {
+            char[] buffer = new char[max];
+            char c;
+
+            for (int i = 0; i < max; i++)
+            {
+                c = (char)br.ReadByte();
+                if (c == 0)
+                    break;
+
+                buffer[i] = c;
+            }
+
+            string str = new string(buffer);
+            if (str.Contains('\0'))
+            {
+                str = str.Split('\0')[0];
+            }
+
+            return str;
         }
     }
 }

@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Angle Tile 1.ogf" />
+    <None Remove="CED Grid2S.ogf" />
     <None Remove="EXTRA13.HOG" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Angle Tile 1.ogf" />
+    <EmbeddedResource Include="CED Grid2S.ogf" />
     <EmbeddedResource Include="EXTRA13.HOG" />
   </ItemGroup>
 

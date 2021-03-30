@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorUtils.cs" />
+    <Compile Include="Descent3Bitmap.cs" />
     <Compile Include="HOG2File.cs" />
     <Compile Include="IDataFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
