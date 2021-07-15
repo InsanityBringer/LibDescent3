@@ -45,5 +45,26 @@ namespace LibDescent3
 
             return (ushort)(OpaqueFlag | (r << 10) | (g << 5) | b);
         }
+
+        //TODO: These can be made into LUTs. Would only take up half a meg at most, so memory shouldn't be a big problem. 
+        public static int ConvertRGBA4444To32Bit(ushort color)
+        {
+            int r = (int)((color >> 8) & 15) * 255 / 15;
+            int g = (int)((color >> 4) & 15) * 255 / 15;
+            int b = (int)(color & 15) * 255 / 15;
+            int a = (int)((color >> 12) & 15) * 255 / 15;
+
+            return ((r << 16) | (g << 8) | b | (a << 24));
+        }
+
+        public static int ConvertRGBA5551To32Bit(ushort color)
+        {
+            int r = (int)((color >> 10) & 31) * 255 / 31;
+            int g = (int)((color >> 5) & 31) * 255 / 31;
+            int b = (int)(color & 31) * 255 / 31;
+            int a = (int)((color >> 15) & 1) == 1 ? 255 : 0;
+
+            return ((r << 16) | (g << 8) | b | (a << 24));
+        }
     }
 }

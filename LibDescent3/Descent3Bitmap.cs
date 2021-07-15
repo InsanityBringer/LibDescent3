@@ -211,7 +211,8 @@ namespace LibDescent3
             int offset = 0;
             int r, g, b, i;
 
-            for (int level = 0; level < MipLevels; level++)
+            //for (int level = 0; level < MipLevels; level++)
+            int level = 0;
             {
                 total = GetWidth(level) * GetHeight(level);
                 count = 0;
@@ -224,7 +225,7 @@ namespace LibDescent3
                         pixel = (ushort)(data[offset] | (data[offset + 1] << 8));
                         offset += 2;
 
-                        if (Type != BitmapType.Outrage1555CompressedMipped || Type != BitmapType.Outrage4444CompressedMipped)
+                        if (Type != BitmapType.Outrage1555CompressedMipped && Type != BitmapType.Outrage4444CompressedMipped)
                         {
                             if (pixel == 0x07e0)
                                 pixel = ColorUtils.NewTransparentColor;
@@ -246,7 +247,7 @@ namespace LibDescent3
                         pixel = (ushort)(data[offset] | (data[offset + 1] << 8));
                         offset += 2;
 
-                        if (Type != BitmapType.Outrage1555CompressedMipped || Type != BitmapType.Outrage4444CompressedMipped)
+                        if (Type != BitmapType.Outrage1555CompressedMipped && Type != BitmapType.Outrage4444CompressedMipped)
                         {
                             if (pixel == 0x07e0)
                                 pixel = ColorUtils.NewTransparentColor;
