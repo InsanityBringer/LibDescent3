@@ -117,12 +117,12 @@ namespace LibDescent3
 
         public int GetWidth(int mipLevel)
         {
-            return Math.Max(1, Width / (int)Math.Pow(2, mipLevel));
+            return Math.Max(1, Width >> mipLevel);
         }
 
         public int GetHeight(int mipLevel)
         {
-            return Math.Max(1, Height / (int)Math.Pow(2, mipLevel));
+            return Math.Max(1, Height >> mipLevel);
         }
 
         /// <summary>
