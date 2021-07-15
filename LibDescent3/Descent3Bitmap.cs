@@ -50,6 +50,9 @@ namespace LibDescent3
         OutrageTGAType = 126,
         OutrageCompressedOGF = 127
     }
+    /// <summary>
+    /// The fomrat of the bitmap, in memory. 
+    /// </summary>
     public enum ImageType
     {
         Format4444,
@@ -85,9 +88,12 @@ namespace LibDescent3
         /// </summary>
         public string Name { get; }
         /// <summary>
-        /// Type of the bitmap, used for serialization. 
+        /// Type of the bitmap as saved to disk. 
         /// </summary>
         public BitmapType Type { get; }
+        /// <summary>
+        /// Format of the image in memory. 
+        /// </summary>
         public ImageType Format { get; }
 
         public Descent3Bitmap(BitmapType type, ImageType format, string name, int width, int height, int miplevels, int pixsize)
@@ -125,13 +131,14 @@ namespace LibDescent3
         /// <param name="br">A binary reader wrapping the stream to read from.</param>
         /// <param name="preferredType">The preferred type of the image, for TGA files. Loaded TGA files will be converted to this format.</param>
         /// <returns>The bitmap processed from the stream.</returns>
-        public static Descent3Bitmap ReadBitmapFromStream(BinaryReader br, ImageType preferredType = ImageType.Format4444)
+        public static Descent3Bitmap ReadBitmapFromOGFStream(BinaryReader br)
         {
             byte imageIDLen = br.ReadByte();
             byte colorMapType = br.ReadByte();
             BitmapType type = (BitmapType)br.ReadByte();
             string name = "";
             int numMipLevels = 1;
+            ImageType preferredType = ImageType.Format1555;
 
             //todo: fix
             if (colorMapType != 0)
@@ -155,8 +162,8 @@ namespace LibDescent3
                 }
                 else
                 {
-                    char[] buf = br.ReadChars(35);
-                    name = new string(buf);
+                    char[] namebuf = br.ReadChars(35);
+                    name = new string(namebuf);
                     //split out null
                     if (name.Contains('\0'))
                     {
@@ -168,6 +175,10 @@ namespace LibDescent3
                 {
                     numMipLevels = br.ReadByte();
                 }
+            }
+            else
+            {
+                throw new InvalidDataException("Cannot read TGAs from Descent3Bitmap::ReadBitmapFromOGFStream.");
             }
 
             br.ReadBytes(9); //skip padding
@@ -186,31 +197,8 @@ namespace LibDescent3
 
             bool upsideDown = 1 - ((descriptor & 0x20) >> 5) == 1;
 
-            //carnival of image format reading
-            int pixel;
-            if (type == BitmapType.TGACompressedTruecolor)
-            {
-                int total = 0;
-                int length;
-                byte command;
-
-                while (total < width * height)
-                {
-                    command = br.ReadByte();
-                    length = (command & 127) + 1;
-
-                    if ((command & 128) != 0)
-                    {
-
-                    }
-                }
-            }
-
-            else if (type > BitmapType.OutrageTypeStart)
-            {
-                byte[] buf = br.ReadBytes((int)(br.BaseStream.Length - br.BaseStream.Position));
-                bm.InitializeFromCompressedOutrageData(buf);
-            }
+            byte[] buf = br.ReadBytes((int)(br.BaseStream.Length - br.BaseStream.Position));
+            bm.InitializeFromCompressedOutrageData(buf);
 
             return bm;
         }
@@ -248,10 +236,10 @@ namespace LibDescent3
 
                                 pixel = (ushort)(ColorUtils.OpaqueFlag | (r << 10) | (g << 5) | b);
                             }
-
-                            Data16BPP[level][count] = pixel;
-                            count++;
                         }
+
+                        Data16BPP[level][count] = pixel;
+                        count++;
                     }
                     else if (rleCount >= 2 && rleCount <= 250)
                     {
@@ -270,12 +258,12 @@ namespace LibDescent3
 
                                 pixel = (ushort)(ColorUtils.OpaqueFlag | (r << 10) | (g << 5) | b);
                             }
+                        }
 
-                            for (i = 0; i < rleCount; i++)
-                            {
-                                Data16BPP[level][count] = pixel;
-                                count++;
-                            }
+                        for (i = 0; i < rleCount; i++)
+                        {
+                            Data16BPP[level][count] = pixel;
+                            count++;
                         }
                     }
                 }

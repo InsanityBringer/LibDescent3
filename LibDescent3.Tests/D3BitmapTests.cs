@@ -11,7 +11,7 @@ namespace LibDescent3.Tests
             //Test 1: Unmipped image from HOG2 file.
             HOG2File hogFile = new HOG2File(TestUtils.GetResourceStream("EXTRA13.HOG"));
             BinaryReader br = new BinaryReader(hogFile.GetLumpAsStream(0));
-            Descent3Bitmap bm = Descent3Bitmap.ReadBitmapFromStream(br);
+            Descent3Bitmap bm = Descent3Bitmap.ReadBitmapFromOGFStream(br);
 
             Assert.AreEqual(32, bm.Width);
             Assert.AreEqual(32, bm.Height);
@@ -24,7 +24,7 @@ namespace LibDescent3.Tests
             br.Close();
 
             br = new BinaryReader(TestUtils.GetResourceStream("Angle Tile 1.ogf"));
-            bm = Descent3Bitmap.ReadBitmapFromStream(br);
+            bm = Descent3Bitmap.ReadBitmapFromOGFStream(br);
 
             Assert.AreEqual(128, bm.Width);
             Assert.AreEqual(128, bm.Height);
@@ -37,7 +37,7 @@ namespace LibDescent3.Tests
             br.Close();
 
             br = new BinaryReader(TestUtils.GetResourceStream("CED Grid2S.ogf"));
-            bm = Descent3Bitmap.ReadBitmapFromStream(br);
+            bm = Descent3Bitmap.ReadBitmapFromOGFStream(br);
 
             Assert.AreEqual(128, bm.Width);
             Assert.AreEqual(128, bm.Height);
