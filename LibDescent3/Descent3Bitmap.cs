@@ -117,12 +117,12 @@ namespace LibDescent3
 
         public int GetWidth(int mipLevel)
         {
-            return Width / ((mipLevel + 1) * (mipLevel + 1));
+            return Width / (int)Math.Pow(2, mipLevel);
         }
 
         public int GetHeight(int mipLevel)
         {
-            return Height / ((mipLevel + 1) * (mipLevel + 1));
+            return Height / (int)Math.Pow(2, mipLevel);
         }
 
         /// <summary>
@@ -211,8 +211,7 @@ namespace LibDescent3
             int offset = 0;
             int r, g, b, i;
 
-            //for (int level = 0; level < MipLevels; level++)
-            int level = 0;
+            for (int level = 0; level < MipLevels; level++)
             {
                 total = GetWidth(level) * GetHeight(level);
                 count = 0;
@@ -266,6 +265,10 @@ namespace LibDescent3
                             Data16BPP[level][count] = pixel;
                             count++;
                         }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Got bad RLE run while decompressing OGF");
                     }
                 }
             }
