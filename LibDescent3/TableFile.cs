@@ -28,9 +28,11 @@ namespace LibDescent3
 {
     public class TableFile : IDataFile
     {
+        public List<Texture> Textures { get; } = new List<Texture>();
         public List<Door> Doors { get; } = new List<Door>();
         public List<Sound> Sounds { get; } = new List<Sound>();
         public List<Gamefile> Gamefiles { get; } = new List<Gamefile>();
+        public List<Ship> Ships { get; } = new List<Ship>();
 
         public void Read(Stream stream)
         {
@@ -45,8 +47,14 @@ namespace LibDescent3
 
                 switch (type)
                 {
+                    case 1:
+                        Textures.Add(PageIO.ReadTexture(br));
+                        break;
                     case 5:
                         Doors.Add(PageIO.ReadDoor(br));
+                        break;
+                    case 6:
+                        Ships.Add(PageIO.ReadShip(br));
                         break;
                     case 7:
                         Sounds.Add(PageIO.ReadSound(br));
@@ -54,9 +62,7 @@ namespace LibDescent3
                     case 9:
                         Gamefiles.Add(PageIO.ReadGamefile(br));
                         break;
-                    case 1:
                     case 2:
-                    case 6:
                     case 8:
                     case 10:
                     case 0:
